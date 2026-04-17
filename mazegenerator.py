@@ -35,7 +35,7 @@ class MazeGenerator:
         self._maze = [[15 for _ in range(width)] for _ in range(height)]
         self._solution = ""
 
-    # public functions
+    # public methods
 
     def generate(self) -> None:
         """
@@ -101,9 +101,7 @@ class MazeGenerator:
         """Return the random seed used for generation."""
         return self._seed
 
-    # ----------------------------------------------------------------------
-    # Private core methods
-    # ----------------------------------------------------------------------
+    # Private methods
 
     def _generate_prim(self) -> None:
         """
