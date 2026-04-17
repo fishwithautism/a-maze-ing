@@ -1,0 +1,6 @@
+entry=  3,4
+exit=3,6
+HeiGht=33
+Width=8
+Perfect=yes
+output_file=nigger
