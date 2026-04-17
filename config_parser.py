@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Config parser for the maze generator (a_maze_ing.py).
 
