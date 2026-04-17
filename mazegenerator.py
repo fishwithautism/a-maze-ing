@@ -3,6 +3,7 @@ import random
 from typing import List, Tuple
 from collections import deque
 
+
 class MazeGenerator:
     """
     Perfect maze generator using randomized DFS/Prim's algorithm.
@@ -11,9 +12,9 @@ class MazeGenerator:
     """
 
     def __init__(
-        self, width: int, height: int,
-        entry: Tuple[int, int], exit: Tuple[int, int],
-        seed: int = 42, algo: str = "prim"):
+            self, width: int, height: int,
+            entry: Tuple[int, int], exit: Tuple[int, int],
+            seed: int = 42, algo: str = "prim") -> None:
         """
         Initialize the maze generator with all necessary parameters.
 
@@ -29,9 +30,11 @@ class MazeGenerator:
         self._entry = entry
         self._exit = exit
         self._seed = seed
+        self.algorithm = algo.lower()
         random.seed(seed)
 
-        # Maze grid: each cell is a bitmask (0-15), initially all walls closed (15)
+        # Maze grid: each cell is a bitmask (0-15),
+        # initially all walls closed (15)
         self._maze = [[15 for _ in range(width)] for _ in range(height)]
         self._solution = ""
 
@@ -46,8 +49,10 @@ class MazeGenerator:
             2. Opening of entry/exit border walls
             3. Addition of '42' pattern (2x2 fully closed cells)
         """
-        self._generate_prim()
-        self._apply_entry_and_exit()
+        if self.algorithm == "dfs":
+            self._generate_prim()
+        else:
+            self._generate_prim()
         self._add_42_pattern()
 
     def get_maze(self) -> List[List[int]]:
@@ -82,7 +87,8 @@ class MazeGenerator:
 
     def get_solution(self) -> str:
         """
-        Return the shortest path from entry to exit as a string of letters (N/E/S/W).
+        Return the shortest path from entry to exit
+        as a string of letters (N/E/S/W).
         The path is computed lazily on first call and cached.
         """
         if not self._solution:
@@ -106,7 +112,8 @@ class MazeGenerator:
     def _generate_prim(self) -> None:
         """
         Private: Generate a perfect maze using randomized Prim's algorithm.
-        All cells start with all walls closed; walls are knocked down to create passages.
+        All cells start with all walls closed; walls are knocked
+        down to create passages.
         """
         # Track which cells are already part of the maze
         in_maze = [[False] * self._width for _ in range(self._height)]
@@ -148,51 +155,30 @@ class MazeGenerator:
             if nx == fx + 1:   # neighbor is EAST
                 self._maze[fy][fx] &= ~2   # clear east wall of 'from'
                 self._maze[ny][nx] &= ~8   # clear west wall of neighbor
-            elif nx == fx - 1: # neighbor is WEST
+            elif nx == fx - 1:  # neighbor is WEST
                 self._maze[fy][fx] &= ~8
                 self._maze[ny][nx] &= ~2
-            elif ny == fy + 1: # neighbor is SOUTH
+            elif ny == fy + 1:  # neighbor is SOUTH
                 self._maze[fy][fx] &= ~4
                 self._maze[ny][nx] &= ~1
-            elif ny == fy - 1: # neighbor is NORTH
+            elif ny == fy - 1:  # neighbor is NORTH
                 self._maze[fy][fx] &= ~1
                 self._maze[ny][nx] &= ~4
 
             in_maze[ny][nx] = True
             add_frontier(nx, ny)
 
-    def _apply_entry_and_exit(self) -> None:
-        """
-        Private: Open the outer walls for entry and exit cells.
-        Assumes entry and exit are on the border (as per typical maze requirements).
-        """
-        ex, ey = self._entry
-        if ex == 0:          # west border
-            self._maze[ey][ex] &= ~8
-        elif ex == self._width - 1:  # east border
-            self._maze[ey][ex] &= ~2
-        if ey == 0:          # north border
-            self._maze[ey][ex] &= ~1
-        elif ey == self._height - 1:  # south border
-            self._maze[ey][ex] &= ~4
-
-        ex, ey = self._exit
-        if ex == 0:
-            self._maze[ey][ex] &= ~8
-        elif ex == self._width - 1:
-            self._maze[ey][ex] &= ~2
-        if ey == 0:
-            self._maze[ey][ex] &= ~1
-        elif ey == self._height - 1:
-            self._maze[ey][ex] &= ~4
-
     def _add_42_pattern(self) -> None:
         """
-        Private: Add the mandatory '42' pattern - a 2x2 block of fully closed cells (mask=15).
-        If the maze is too small (width<2 or height<2), prints an error message as required.
+        Private: Add the mandatory '42' pattern - a 2x2 block of
+        fully closed cells (mask=15).
+        If the maze is too small (width<2 or height<2), prints an error
+        message as required.
         """
         if self._width < 2 or self._height < 2:
-            print("Error: Maze too small to add '42' pattern (need at least 2x2)")
+            print(
+                "Error: Maze too small to add '42' pattern (need at least 2x2)"
+                )
             return
 
         # Choose a random top-left corner for the 2x2 block
@@ -210,7 +196,8 @@ class MazeGenerator:
         Private: Compute the shortest path from entry to exit using BFS.
         Stores the result in self._solution as a string of N/E/S/W.
         """
-        # Directions: (dx, dy, wall_bit_from_current, opposite_wall_bit, letter)
+        # Directions:
+        # (dx, dy, wall_bit_from_current, opposite_wall_bit, letter)
         directions = [
             (1, 0, 2, 8, 'E'),   # east
             (-1, 0, 8, 2, 'W'),  # west
@@ -234,9 +221,11 @@ class MazeGenerator:
 
             for dx, dy, wall_self, wall_neighbor, letter in directions:
                 nx, ny = x + dx, y + dy
-                if 0 <= nx < self._width and 0 <= ny < self._height and not visited[ny][nx]:
+                if 0 <= nx < self._width and (
+                     0 <= ny < self._height and not visited[ny][nx]):
                     # Check if wall is open between current and neighbor
-                    if (self._maze[y][x] & wall_self) == 0 and (self._maze[ny][nx] & wall_neighbor) == 0:
+                    if (self._maze[y][x] & wall_self) == 0 and (
+                         self._maze[ny][nx] & wall_neighbor) == 0:
                         visited[ny][nx] = True
                         queue.append((nx, ny, path + letter))
 

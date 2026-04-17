@@ -3,7 +3,8 @@ Config parser for the maze generator (a_maze_ing.py).
 
 Reads a configuration file in the format:
     KEY = VALUE
-Lines starting with '#' are ignored. Empty lines are ignored.
+
+Lines starting with '#'(comments) are ignored. Empty lines are ignored.
 Keys are case insensitive but stored as uppercase.
 Mandatory keys: WIDTH, HEIGHT, ENTRY, EXIT, OUTPUT_FILE, PERFECT.
 """
@@ -133,7 +134,7 @@ def parse_config(config_path: Union[str, Path]) -> Dict[str, Any]:
                 config[key] = value
 
             else:
-                # Any additional key (e.g., SEED, ALGORITHM) is stored as is
+                # Any additional key (e.g., SEED) is stored as it is
                 config[key] = value
 
     # After reading all lines, ensure all mandatory keys are present

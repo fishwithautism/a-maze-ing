@@ -1,5 +1,6 @@
 import sys
 from config_parser import parse_config, ConfigParseError
+from mazegenerator import MazeGenerator
 
 
 def main():
@@ -13,8 +14,16 @@ def main():
         except (ConfigParseError, OSError) as e:
             print(f"Error: {e}")
             sys.exit(1)
-    except (KeyboardInterrupt, OSError):
-        print("bad trip")
+        maze = MazeGenerator(
+            width=config["WIDTH"],
+            height=config["HEIGHT"],
+            entry=config["ENTRY"],
+            exit=config["EXIT"],
+            perfect=config["PERFECT"]
+        )
+        maze.generate()
+    except (KeyboardInterrupt, OSError, Exception):
+        print(" bad trip")
         return
 
 
