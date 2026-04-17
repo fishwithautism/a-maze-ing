@@ -13,11 +13,6 @@ def main():
         print(f"Error: {e}")
         sys.exit(1)
 
-    # Now use config['WIDTH'], config['HEIGHT'], etc.
-    print("Configuration loaded successfully:")
-    for k, v in config.items():
-        print(f"  {k} = {v}")
-
 
 if __name__ == "__main__":
     main()
