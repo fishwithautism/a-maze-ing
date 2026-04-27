@@ -55,8 +55,8 @@ def parse_config(config_path: Union[str, Path]) -> Dict[str, Any]:
             # Check for KEY=VALUE format
             if "=" not in line:
                 raise ConfigParseError(
-                    f"Line {line_num}: missing '=' separator -> '{
-                        raw_line.rstrip()}'"
+                    f"Line {line_num}: missing '=' separator -> '"
+                    f"{raw_line.rstrip()}'"
                 )
 
             # Split on first '=' only (values may contain '=')
@@ -115,9 +115,9 @@ def parse_config(config_path: Union[str, Path]) -> Dict[str, Any]:
             elif key == "PERFECT":
                 # Accept true/false, True/False, 1/0, yes/no (case‑insensitive)
                 normalized = value.lower()
-                if normalized in ("true", "1", "yes"):
+                if normalized in ("true", "1"):
                     config[key] = True
-                elif normalized in ("false", "0", "no"):
+                elif normalized in ("false", "0"):
                     config[key] = False
                 else:
                     raise ConfigParseError(
@@ -130,6 +130,11 @@ def parse_config(config_path: Union[str, Path]) -> Dict[str, Any]:
                 if not value:
                     raise ConfigParseError(
                         f"Line {line_num}: OUTPUT_FILE cannot be empty"
+                    )
+                if value.endswith(".py") or value == "config.txt":
+                    raise ConfigParseError(
+                        f"Line {line_num}: OUTPUT_FILE name cannot "
+                        "conflict with program file names"
                     )
                 config[key] = value
 

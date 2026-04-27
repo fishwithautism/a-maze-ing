@@ -1,0 +1,10 @@
+[tool.poetry]
+name = "mazegen"
+version = "1.0.0"
+description = "A maze generator using Prim's algorithm"
+authors = ["mohael-g", "azennani"]
+packages = [{ include = "mazegenerator.py" }]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
